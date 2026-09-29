@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="TN Fitness Tracker - A modern, interactive fitness dashboard for scheduling workouts, tracking daily habits, and achieving health goals.">
+  <title>TN FITNESS | Modern Fitness & Workout Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Sticky Top Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="#dashboard" class="brand-link" aria-label="TN Fitness Home">
+        <span class="brand-icon">TN</span>
+        <span>TN FITNESS<span class="brand-dot">.</span></span>
+      </a>
+
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="#dashboard" class="nav-item-link active"><span>◒</span> Dashboard</a></li>
+        <li><a href="#workouts" class="nav-item-link"><span>⚡</span> Workouts</a></li>
+        <li><a href="#calendar" class="nav-item-link"><span>📅</span> Calendar</a></li>
+        <li><a href="#progress" class="nav-item-link"><span>↗</span> Progress</a></li>
+        <li id="profileNavItem" class="hidden"><a href="#profile" class="nav-item-link"><span>◉</span> Profile</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <!-- Theme Toggle Button -->
+        <button class="theme-btn" id="themeToggleBtn" title="Toggle Light/Dark Theme" aria-label="Toggle theme">☼</button>
+
+        <!-- Unauthenticated State Actions -->
+        <div id="unauthActions" class="nav-auth-group">
+          <button class="btn btn-outline btn-sm" id="navLoginBtn">Login</button>
+          <button class="btn btn-primary btn-sm" id="navRegisterBtn">Register</button>
+        </div>
+
+        <!-- Authenticated State Actions -->
+        <div id="authActions" class="nav-auth-group hidden">
+          <div class="user-nav-chip" id="userNavChip" title="View Profile">
+            <span class="nav-avatar" id="navUserAvatar">NI</span>
+            <span id="navUserName">Nithin Inti</span>
+          </div>
+          <button class="btn btn-outline btn-sm" id="navLogoutBtn">Logout</button>
+        </div>
+
+        <!-- Mobile Menu Hamburger -->
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle navigation menu">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Application Container -->
+  <main class="main-wrapper">
+
+    <!-- Hero / Welcome Banner -->
+    <section class="hero-banner" id="home">
+      <div class="hero-text">
+        <span class="eyebrow">✦ Daily Momentum</span>
+        <h1>Welcome back, <span id="heroUserName">Athlete</span>!</h1>
+        <p>Small, consistent actions build peak performance. Track workouts, log hydration, and crush your goals.</p>
+        <div class="hero-actions">
+          <a href="#calendar" class="btn btn-primary">📅 Open Calendar</a>
+          <a href="#workouts" class="btn btn-neon">⚡ Start Workout</a>
+          <button class="btn btn-outline" id="quickLogActivityBtn">+ Log Today's Stats</button>
+        </div>
+      </div>
+      <div class="hero-stats-badge">
+        <div>
+          <span class="eyebrow">Daily Readiness</span>
+          <div class="hero-ring-score" id="dailyGoalScore">78%</div>
+          <small class="text-muted">Targets achieved today</small>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 1: Fitness Dashboard -->
+    <section class="dashboard-section" id="dashboard">
+      <div class="section-header-row">
+        <div>
+          <span class="eyebrow">Today at a Glance</span>
+          <h2 class="section-title">Fitness Dashboard</h2>
+          <p class="section-desc">Real-time metrics, live vitals, and habit tracking.</p>
+        </div>
+        <div class="badge badge-emerald font-mono" id="liveDateBadge">
+          <span id="digitalClock">00:00:00</span> · <span id="currentDateText">Loading...</span>
+        </div>
+      </div>
+
+      <!-- Core Metrics Cards -->
+      <div class="metrics-grid">
+        <!-- Steps Card -->
+        <article class="metric-card">
+          <div class="metric-top-row">
+            <span class="metric-icon-wrap metric-icon-steps">👟</span>
+            <span class="badge badge-emerald" id="stepsTrend">+12% vs avg</span>
+          </div>
+          <div class="metric-value-row">
+            <span class="metric-label">Daily Steps</span>
+            <div class="metric-main-val">
+              <span id="stepsValDisplay">7,420</span> <small>/ <span id="stepsGoalDisplay">10,000</span></small>
+            </div>
+          </div>
+          <div class="progress-bar-wrap">
+            <div class="progress-bar-fill fill-emerald" id="stepsProgressBar" style="width: 74%"></div>
+          </div>
+          <div class="metric-bottom-row">
+            <span id="stepsRemaining">2,580 steps to goal</span>
+            <button class="btn btn-ghost btn-sm" id="quickAddStepsBtn">+1,000</button>
+          </div>
+        </article>
+
+        <!-- Calories Card -->
+        <article class="metric-card">
+          <div class="metric-top-row">
+            <span class="metric-icon-wrap metric-icon-calories">🔥</span>
+            <span class="badge badge-orange">Optimal</span>
+          </div>
+          <div class="metric-value-row">
+            <span class="metric-label">Calories Burned</span>
+            <div class="metric-main-val">
+              <span id="caloriesValDisplay">1,840</span> <small>/ <span id="caloriesGoalDisplay">2,400</span> kcal</small>
+            </div>
+          </div>
+          <div class="progress-bar-wrap">
+            <div class="progress-bar-fill fill-orange" id="caloriesProgressBar" style="width: 76%"></div>
+          </div>
+          <div class="metric-bottom-row">
+            <span id="caloriesRemaining">560 kcal remaining</span>
+            <span class="font-mono">76% reached</span>
+          </div>
+        </article>
+
+        <!-- Workout Duration Card -->
+        <article class="metric-card">
+          <div class="metric-top-row">
+            <span class="metric-icon-wrap metric-icon-time">⏱️</span>
+            <span class="badge badge-purple">Active Day</span>
+          </div>
+          <div class="metric-value-row">
+            <span class="metric-label">Workout Duration</span>
+            <div class="metric-main-val">
+              <span id="workoutValDisplay">45</span> <small>/ <span id="workoutGoalDisplay">60</span> min</small>
+            </div>
+          </div>
+          <div class="progress-bar-wrap">
+            <div class="progress-bar-fill fill-purple" id="workoutProgressBar" style="width: 75%"></div>
+          </div>
+          <div class="metric-bottom-row">
+            <span id="workoutRemaining">15 min to goal</span>
+            <button class="btn btn-ghost btn-sm" id="launchTimerFromCardBtn">⚡ Focus Timer</button>
+          </div>
+        </article>
+
+        <!-- Hydration Card -->
+        <article class="metric-card">
+          <div class="metric-top-row">
+            <span class="metric-icon-wrap metric-icon-water">💧</span>
+            <span class="badge badge-blue" id="waterStreakBadge">🔥 4-Day Streak</span>
+          </div>
+          <div class="metric-value-row">
+            <span class="metric-label">Water Intake</span>
+            <div class="metric-main-val">
+              <span id="waterValDisplay">5</span> <small>/ <span id="waterGoalDisplay">8</span> glasses</small>
+            </div>
+          </div>
+          <div class="progress-bar-wrap">
+            <div class="progress-bar-fill fill-blue" id="waterProgressBar" style="width: 62.5%"></div>
+          </div>
+          <div class="metric-bottom-row">
+            <span id="waterRemaining">3 glasses left</span>
+            <button class="btn btn-ghost btn-sm" id="quickAddWaterBtn">+1 Glass</button>
+          </div>
+        </article>
+      </div>
+
+      <!-- Live Heart-Rate Monitor Card -->
+      <article class="heart-rate-card">
+        <div class="hr-live-pulse">
+          <div class="hr-pulse-circle">❤️</div>
+          <div>
+            <div class="hr-current-bpm"><span id="liveBpmDisplay">74</span> <span class="hr-bpm-unit">BPM</span></div>
+            <span class="badge badge-emerald">Resting Heart Rate</span>
+          </div>
+        </div>
+        <div class="hr-stat-box">
+          <p>Resting Pulse</p>
+          <strong>62 <small>BPM</small></strong>
+        </div>
+        <div class="hr-stat-box">
+          <p>Max Peak Today</p>
+          <strong>148 <small>BPM</small></strong>
+        </div>
+        <div class="hr-stat-box">
+          <p>Cardio Status</p>
+          <strong style="color: var(--emerald);">Normal / Aerobic</strong>
+        </div>
+      </article>
+    </section>
+
+    <!-- SECTION 2: Workout Categories -->
+    <section class="dashboard-section" id="workouts">
+      <div class="section-header-row">
+        <div>
+          <span class="eyebrow">Training Modules</span>
+          <h2 class="section-title">Workout Categories</h2>
+          <p class="section-desc">Select an activity to start an instant focus timer or schedule it directly on your calendar.</p>
+        </div>
+      </div>
+
+      <div class="categories-grid">
+        <!-- 1. Running -->
+        <article class="category-card category-card-running">
+          <div class="category-top-row">
+            <div class="category-icon-badge">🏃</div>
+            <span class="badge badge-orange">High Intensity</span>
+          </div>
+          <div>
+            <h3 class="category-title">Running</h3>
+            <p class="category-desc">Boost cardiovascular endurance, accelerate fat burn, and increase stamina with interval or tempo runs.</p>
+          </div>
+          <div class="category-stats-row">
+            <span>🔥 ~450 kcal/hr</span>
+            <span>⏱️ 30–60 min</span>
+          </div>
+          <div class="category-actions">
+            <button class="btn btn-primary btn-sm start-category-timer" data-type="Running" data-duration="30">⚡ Start</button>
+            <button class="btn btn-outline btn-sm add-category-calendar" data-type="Running" data-calories="350" data-duration="30">📅 Schedule</button>
+          </div>
+        </article>
+
+        <!-- 2. Cycling -->
+        <article class="category-card category-card-cycling">
+          <div class="category-top-row">
+            <div class="category-icon-badge">🚴</div>
+            <span class="badge badge-blue">Moderate-High</span>
+          </div>
+          <div>
+            <h3 class="category-title">Cycling</h3>
+            <p class="category-desc">Low-impact, high-reward lower body power training. Great for knee joints, VO2 max, and endurance.</p>
+          </div>
+          <div class="category-stats-row">
+            <span>🔥 ~520 kcal/hr</span>
+            <span>⏱️ 40–75 min</span>
+          </div>
+          <div class="category-actions">
+            <button class="btn btn-primary btn-sm start-category-timer" data-type="Cycling" data-duration="45">⚡ Start</button>
+            <button class="btn btn-outline btn-sm add-category-calendar" data-type="Cycling" data-calories="420" data-duration="45">📅 Schedule</button>
+          </div>
+        </article>
+
+        <!-- 3. Strength Training -->
+        <article class="category-card category-card-strength">
+          <div class="category-top-row">
+            <div class="category-icon-badge">🏋️</div>
+            <span class="badge badge-orange">High Intensity</span>
+          </div>
+          <div>
+            <h3 class="category-title">Strength Training</h3>
+            <p class="category-desc">Build functional muscle mass, increase bone density, and sculpt your physique with progressive overload.</p>
+          </div>
+          <div class="category-stats-row">
+            <span>🔥 ~380 kcal/hr</span>
+            <span>⏱️ 45–60 min</span>
+          </div>
+          <div class="category-actions">
+            <button class="btn btn-primary btn-sm start-category-timer" data-type="Strength Training" data-duration="45">⚡ Start</button>
+            <button class="btn btn-outline btn-sm add-category-calendar" data-type="Strength Training" data-calories="380" data-duration="45">📅 Schedule</button>
+          </div>
+        </article>
+
+        <!-- 4. Yoga -->
+        <article class="category-card category-card-yoga">
+          <div class="category-top-row">
+            <div class="category-icon-badge">🧘</div>
+            <span class="badge badge-purple">Mind & Body</span>
+          </div>
+          <div>
+            <h3 class="category-title">Yoga</h3>
+            <p class="category-desc">Flow through mindful poses, align your posture, center your breathing, and relieve mental stress.</p>
+          </div>
+          <div class="category-stats-row">
+            <span>🔥 ~200 kcal/hr</span>
+            <span>⏱️ 20–45 min</span>
+          </div>
+          <div class="category-actions">
+            <button class="btn btn-primary btn-sm start-category-timer" data-type="Yoga" data-duration="25">⚡ Start</button>
+            <button class="btn btn-outline btn-sm add-category-calendar" data-type="Yoga" data-calories="180" data-duration="25">📅 Schedule</button>
+          </div>
+        </article>
+
+        <!-- 5. Stretching -->
+        <article class="category-card category-card-stretching">
+          <div class="category-top-row">
+            <div class="category-icon-badge">🤸</div>
+            <span class="badge badge-emerald">Mobility</span>
+          </div>
+          <div>
+            <h3 class="category-title">Stretching</h3>
+            <p class="category-desc">Enhance dynamic joint mobility, release tight muscles, and accelerate post-workout recovery.</p>
+          </div>
+          <div class="category-stats-row">
+            <span>🔥 ~140 kcal/hr</span>
+            <span>⏱️ 15–30 min</span>
+          </div>
+          <div class="category-actions">
+            <button class="btn btn-primary btn-sm start-category-timer" data-type="Stretching" data-duration="15">⚡ Start</button>
+            <button class="btn btn-outline btn-sm add-category-calendar" data-type="Stretching" data-calories="120" data-duration="15">📅 Schedule</button>
+          </div>
+        </article>
+
+        <!-- 6. Swimming -->
+        <article class="category-card category-card-swimming">
+          <div class="category-top-row">
+            <div class="category-icon-badge">🏊</div>
+            <span class="badge badge-blue">Full-Body</span>
+          </div>
+          <div>
+            <h3 class="category-title">Swimming</h3>
+            <p class="category-desc">Total-body resistance with zero joint impact. Tones muscles, expands lung capacity, and burns calories.</p>
+          </div>
+          <div class="category-stats-row">
+            <span>🔥 ~500 kcal/hr</span>
+            <span>⏱️ 30–50 min</span>
+          </div>
+          <div class="category-actions">
+            <button class="btn btn-primary btn-sm start-category-timer" data-type="Swimming" data-duration="35">⚡ Start</button>
+            <button class="btn btn-outline btn-sm add-category-calendar" data-type="Swimming" data-calories="320" data-duration="35">📅 Schedule</button>
+          </div>
+        </article>
+
+        <!-- 7. Walking -->
+        <article class="category-card category-card-walking">
+          <div class="category-top-row">
+            <div class="category-icon-badge">🚶</div>
+            <span class="badge badge-emerald">Daily Habit</span>
+          </div>
+          <div>
+            <h3 class="category-title">Walking</h3>
+            <p class="category-desc">The ultimate longevity habit. Boosts mental clarity, regulates blood sugar, and keeps you active daily.</p>
+          </div>
+          <div class="category-stats-row">
+            <span>🔥 ~220 kcal/hr</span>
+            <span>⏱️ 30–60 min</span>
+          </div>
+          <div class="category-actions">
+            <button class="btn btn-primary btn-sm start-category-timer" data-type="Walking" data-duration="30">⚡ Start</button>
+            <button class="btn btn-outline btn-sm add-category-calendar" data-type="Walking" data-calories="160" data-duration="30">📅 Schedule</button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- SECTION 3: Interactive Fitness Calendar -->
+    <section class="dashboard-section" id="calendar">
+      <div class="section-header-row">
+        <div>
+          <span class="eyebrow">Schedule & Routine</span>
+          <h2 class="section-title">Fitness Calendar</h2>
+          <p class="section-desc">Plan workouts, select dates to review activities, and check off completed sessions.</p>
+        </div>
+        <button class="btn btn-primary" id="openAddWorkoutModalBtn">+ Schedule Workout</button>
+      </div>
+
+      <div class="calendar-layout">
+        <!-- Main Calendar Grid Pane -->
+        <div class="calendar-main-pane">
+          <div class="calendar-nav-bar">
+            <h3 class="calendar-month-title" id="calMonthYearTitle">August 2026</h3>
+            <div class="calendar-nav-controls">
+              <button class="cal-nav-btn" id="calPrevMonthBtn" title="Previous Month" aria-label="Previous month">‹</button>
+              <button class="btn btn-outline btn-sm" id="calTodayBtn">Today</button>
+              <button class="cal-nav-btn" id="calNextMonthBtn" title="Next Month" aria-label="Next month">›</button>
+            </div>
+          </div>
+
+          <!-- Weekday Headers -->
+          <div class="cal-weekdays">
+            <span>Sun</span>
+            <span>Mon</span>
+            <span>Tue</span>
+            <span>Wed</span>
+            <span>Thu</span>
+            <span>Fri</span>
+            <span>Sat</span>
+          </div>
+
+          <!-- Month Days Grid -->
+          <div class="cal-days-grid" id="calDaysGrid">
+            <!-- Rendered dynamically by JavaScript -->
+          </div>
+        </div>
+
+        <!-- Selected Date Side Pane -->
+        <div class="calendar-side-pane">
+          <div class="cal-side-header">
+            <div>
+              <span class="eyebrow">Selected Date</span>
+              <h3 id="selectedDateTitle">Tuesday, Aug 18</h3>
+              <p id="selectedDateSubtitle">3 workouts scheduled</p>
+            </div>
+            <button class="btn btn-neon btn-sm" id="addWorkoutForSelectedDateBtn">+ Add</button>
+          </div>
+
+          <!-- Workouts for selected date -->
+          <div class="calendar-workout-list" id="calendarWorkoutList">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: Progress & Analytics -->
+    <section class="dashboard-section" id="progress">
+      <div class="section-header-row">
+        <div>
+          <span class="eyebrow">Performance & Insights</span>
+          <h2 class="section-title">Progress Over Time</h2>
+          <p class="section-desc">Review your training consistency, hydration streak, and body composition.</p>
+        </div>
+      </div>
+
+      <div class="progress-dual-layout">
+        <!-- Weekly Canvas Activity Chart -->
+        <div class="chart-card-panel">
+          <div class="chart-header-row">
+            <div>
+              <span class="eyebrow">Weekly Activity Volume</span>
+              <h3 style="font-size: 1.25rem; font-weight: 800;" id="chartSummaryTotal">48,230 Steps · 6 Workouts</h3>
+            </div>
+            <div class="chart-filter-pills">
+              <button class="chart-pill-btn active" data-range="week">Week</button>
+              <button class="chart-pill-btn" data-range="month">Month</button>
+            </div>
+          </div>
+          <div class="progress-canvas-wrap">
+            <canvas id="progressChart" class="progress-canvas" width="700" height="260" aria-label="Progress graph"></canvas>
+          </div>
+        </div>
+
+        <!-- Hydration & BMI Side Analytics -->
+        <div class="side-analytics-pane">
+          <!-- Interactive Water Tracker -->
+          <div class="water-tracker-card">
+            <div class="water-tracker-top">
+              <div>
+                <span class="eyebrow">Daily Hydration</span>
+                <h3 style="font-size: 1.15rem; font-weight: 800;">Water Glasses Log</h3>
+              </div>
+              <button class="btn btn-ghost btn-sm" id="resetWaterBtn">Reset</button>
+            </div>
+            <p class="text-muted" style="font-size: 0.85rem;">Click glasses to mark intake:</p>
+            <div class="water-glasses-grid" id="waterGlassesGrid">
+              <button class="water-glass-btn filled">1</button>
+              <button class="water-glass-btn filled">2</button>
+              <button class="water-glass-btn filled">3</button>
+              <button class="water-glass-btn filled">4</button>
+              <button class="water-glass-btn filled">5</button>
+              <button class="water-glass-btn">6</button>
+              <button class="water-glass-btn">7</button>
+              <button class="water-glass-btn">8</button>
+            </div>
+            <button class="btn btn-primary btn-sm btn-full" id="addWaterGlassBtn">+ Add Another Glass</button>
+          </div>
+
+          <!-- BMI Calculator Summary -->
+          <div class="bmi-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <span class="eyebrow">Body Mass Index</span>
+              <span class="badge badge-emerald" id="bmiStatusBadge">Healthy Weight</span>
+            </div>
+            <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px;">
+              <h3 style="font-size: 2rem; font-weight: 800; font-family: var(--font-mono);" id="bmiValueDisplay">22.2</h3>
+              <span class="text-muted" style="font-size: 0.85rem;">BMI score</span>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-secondary);" id="bmiSuggestionText">
+              Keep pairing progressive resistance training with a balanced, whole-food diet.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: Profile & Goals -->
+    <section class="dashboard-section" id="profile">
+      <div class="section-header-row">
+        <div>
+          <span class="eyebrow">Account & Customization</span>
+          <h2 class="section-title">Profile & Fitness Goals</h2>
+          <p class="section-desc">Personalize your physical metrics and daily target thresholds.</p>
+        </div>
+      </div>
+
+      <div class="profile-section-layout">
+        <!-- Profile Avatar & Overview -->
+        <div class="profile-sidebar-card">
+          <div class="big-avatar" id="profileBigAvatar">NI</div>
+          <h3 style="font-size: 1.3rem; font-weight: 800;" id="profileDisplayName">Nithin Inti</h3>
+          <p class="text-muted" style="font-size: 0.85rem; margin-bottom: 16px;" id="profileDisplayEmail">demo@fitness.app</p>
+          <span class="badge badge-emerald" id="profileDisplayGoal">Build strength</span>
+        </div>
+
+        <!-- Editable Form -->
+        <form class="profile-form-grid" id="profileForm">
+          <div class="form-group">
+            <label class="form-label" for="profileInputName">Full Name</label>
+            <input type="text" id="profileInputName" class="form-control" value="Nithin Inti" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="profileInputAge">Age</label>
+            <input type="number" id="profileInputAge" class="form-control" value="28" min="12" max="110" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="profileInputHeight">Height (cm)</label>
+            <input type="number" id="profileInputHeight" class="form-control" value="175" min="80" max="250" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="profileInputWeight">Weight (kg)</label>
+            <input type="number" id="profileInputWeight" class="form-control" value="68" min="25" max="300" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="profileSelectGoal">Fitness Goal</label>
+            <select id="profileSelectGoal" class="form-control">
+              <option value="Build strength">Build Strength & Muscle</option>
+              <option value="Improve endurance">Improve Endurance & VO2</option>
+              <option value="Lose weight">Weight Loss & Fat Burn</option>
+              <option value="Stay healthy">General Health & Longevity</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="profileSelectActivity">Activity Level</label>
+            <select id="profileSelectActivity" class="form-control">
+              <option value="Active">Active (4-5 days/wk)</option>
+              <option value="Very active">Very Active (6-7 days/wk)</option>
+              <option value="Moderately active">Moderately Active (2-3 days/wk)</option>
+              <option value="Lightly active">Lightly Active</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="profileInputStepsGoal">Daily Steps Goal</label>
+            <input type="number" id="profileInputStepsGoal" class="form-control" value="10000" min="1000" step="500">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="profileInputWaterGoal">Daily Water Goal (Glasses)</label>
+            <input type="number" id="profileInputWaterGoal" class="form-control" value="8" min="4" max="20">
+          </div>
+          <div class="form-group span-2">
+            <button type="submit" class="btn btn-primary btn-full">Save Profile Changes <span>→</span></button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================================================
+       MODALS
+       ========================================================================== -->
+
+  <!-- 1. LOGIN MODAL -->
+  <div class="modal-overlay" id="loginModal">
+    <div class="modal-card">
+      <button class="modal-close-btn" data-close-modal="loginModal">×</button>
+      <div class="modal-header">
+        <span class="eyebrow">Welcome Back</span>
+        <h3 class="modal-title">Sign In</h3>
+        <p class="modal-desc">Access your fitness schedule and track your daily progress.</p>
+      </div>
+      <form class="auth-form" id="loginForm">
+        <div class="form-group">
+          <label class="form-label" for="loginEmail">Email Address</label>
+          <input type="email" id="loginEmail" class="form-control" placeholder="nithininti3036@gmail.com" required>
+        </div>
+        <div class="form-group">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <label class="form-label" for="loginPassword">Password</label>
+            <button type="button" class="btn-ghost" style="font-size: 0.75rem; color: var(--emerald);" id="forgotPasswordLink">Forgot?</button>
+          </div>
+          <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full">Login to Dashboard <span>→</span></button>
+        <p class="auth-switch-text">
+          Don't have an account yet? 
+          <button type="button" class="auth-switch-btn" id="switchToRegisterBtn">Register</button>
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. REGISTER MODAL -->
+  <div class="modal-overlay" id="registerModal">
+    <div class="modal-card">
+      <button class="modal-close-btn" data-close-modal="registerModal">×</button>
+      <div class="modal-header">
+        <span class="eyebrow">Join TN Fitness</span>
+        <h3 class="modal-title">Create Account</h3>
+        <p class="modal-desc">Start planning workouts, logging health vitals, and building habits.</p>
+      </div>
+      <form class="auth-form" id="registerForm">
+        <div class="form-group">
+          <label class="form-label" for="regName">Full Name</label>
+          <input type="text" id="regName" class="form-control" placeholder="Alex Morgan" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="regEmail">Email Address</label>
+          <input type="email" id="regEmail" class="form-control" placeholder="alex@example.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="regPassword">Password</label>
+          <input type="password" id="regPassword" class="form-control" placeholder="At least 6 characters" minlength="6" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="regConfirmPassword">Confirm Password</label>
+          <input type="password" id="regConfirmPassword" class="form-control" placeholder="Repeat your password" minlength="6" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="regGoal">Primary Fitness Goal</label>
+          <select id="regGoal" class="form-control">
+            <option value="Build strength">Build Strength & Muscle</option>
+            <option value="Improve endurance">Improve Endurance</option>
+            <option value="Lose weight">Lose Weight</option>
+            <option value="Stay healthy">Stay Healthy & Fit</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full">Register Account <span>→</span></button>
+        <p class="auth-switch-text">
+          Already have an account? 
+          <button type="button" class="auth-switch-btn" id="switchToLoginBtn">Login</button>
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. FORGOT PASSWORD MODAL -->
+  <div class="modal-overlay" id="forgotModal">
+    <div class="modal-card">
+      <button class="modal-close-btn" data-close-modal="forgotModal">×</button>
+      <div class="modal-header">
+        <span class="eyebrow">Password Recovery</span>
+        <h3 class="modal-title">Reset Password</h3>
+        <p class="modal-desc">Enter your email and we'll restore your local account access.</p>
+      </div>
+      <form class="auth-form" id="forgotPasswordForm">
+        <div class="form-group">
+          <label class="form-label" for="forgotEmail">Email Address</label>
+          <input type="email" id="forgotEmail" class="form-control" placeholder="your-email@example.com" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full">Recover Password</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 4. ADD / SCHEDULE WORKOUT MODAL -->
+  <div class="modal-overlay" id="addWorkoutModal">
+    <div class="modal-card">
+      <button class="modal-close-btn" data-close-modal="addWorkoutModal">×</button>
+      <div class="modal-header">
+        <span class="eyebrow">Calendar Scheduler</span>
+        <h3 class="modal-title">Schedule Workout</h3>
+        <p class="modal-desc">Add a workout session to your fitness calendar.</p>
+      </div>
+      <form class="auth-form" id="addWorkoutForm">
+        <div class="form-group">
+          <label class="form-label" for="workoutFormName">Workout Title / Note</label>
+          <input type="text" id="workoutFormName" class="form-control" placeholder="e.g. 5K Morning Pace Run" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="workoutFormType">Workout Category</label>
+          <select id="workoutFormType" class="form-control" required>
+            <option value="Running">🏃 Running</option>
+            <option value="Cycling">🚴 Cycling</option>
+            <option value="Strength Training">🏋️ Strength Training</option>
+            <option value="Yoga">🧘 Yoga</option>
+            <option value="Stretching">🤸 Stretching</option>
+            <option value="Swimming">🏊 Swimming</option>
+            <option value="Walking">🚶 Walking</option>
+            <option value="HIIT">⚡ HIIT Cardio</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="workoutFormDate">Scheduled Date</label>
+          <input type="date" id="workoutFormDate" class="form-control" required>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="form-group">
+            <label class="form-label" for="workoutFormDuration">Duration (min)</label>
+            <input type="number" id="workoutFormDuration" class="form-control" value="30" min="5" max="300" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="workoutFormCalories">Calories (kcal)</label>
+            <input type="number" id="workoutFormCalories" class="form-control" value="250" min="10" max="2500" required>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full">Add to Calendar <span>→</span></button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 5. WORKOUT FOCUS TIMER MODAL -->
+  <div class="modal-overlay" id="timerModal">
+    <div class="modal-card timer-modal-card">
+      <button class="modal-close-btn" data-close-modal="timerModal">×</button>
+      <span class="eyebrow">Focus Mode</span>
+      <h3 class="modal-title" id="timerWorkoutTitle">Workout Timer</h3>
+      <div class="timer-display" id="timerDigitsDisplay">30:00</div>
+      <div class="timer-controls-row">
+        <button class="btn btn-neon btn-lg" id="timerTogglePlayBtn">Start</button>
+        <button class="btn btn-outline" id="timerResetBtn">Reset</button>
+      </div>
+      <div class="timer-presets">
+        <button class="preset-btn" data-set-time="15">15m</button>
+        <button class="preset-btn" data-set-time="30">30m</button>
+        <button class="preset-btn" data-set-time="45">45m</button>
+        <button class="preset-btn" data-set-time="60">60m</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. LOG TODAY'S STATS MODAL -->
+  <div class="modal-overlay" id="logStatsModal">
+    <div class="modal-card">
+      <button class="modal-close-btn" data-close-modal="logStatsModal">×</button>
+      <div class="modal-header">
+        <span class="eyebrow">Quick Update</span>
+        <h3 class="modal-title">Log Today's Activity</h3>
+        <p class="modal-desc">Manually update your daily step count, calories, or workout minutes.</p>
+      </div>
+      <form class="auth-form" id="quickLogStatsForm">
+        <div class="form-group">
+          <label class="form-label" for="logStepsInput">Steps Walked</label>
+          <input type="number" id="logStepsInput" class="form-control" placeholder="e.g. 8500" min="0" max="100000" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="logCaloriesInput">Calories Burned (kcal)</label>
+          <input type="number" id="logCaloriesInput" class="form-control" placeholder="e.g. 2100" min="0" max="15000" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="logWorkoutInput">Workout Minutes</label>
+          <input type="number" id="logWorkoutInput" class="form-control" placeholder="e.g. 50" min="0" max="1440" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full">Save Today's Stats <span>→</span></button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Floating Toast Notification System -->
+  <div class="toast-container" id="toastContainer">
+    <div class="toast" id="appToast">
+      <span class="toast-icon">✓</span>
+      <span id="toastMessageText">Welcome to TN Fitness!</span>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="footer-inner">
+      <div class="brand-link">
+        <span class="brand-icon">TN</span>
+        <span>TN FITNESS<span class="brand-dot">.</span></span>
+      </div>
+      <p class="footer-text">Built for long-term health and consistent daily habits. © 2026 TN FITNESS.</p>
+      <div class="badge badge-emerald font-mono">100% Local-First & Private</div>
+    </div>
+  </footer>
+
+  <!-- Application Logic -->
+  <script src="script.js"></script>
+</body>
+</html>
